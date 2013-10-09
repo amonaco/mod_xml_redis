@@ -1,0 +1,15 @@
+<configuration name="xml_redis.conf" description="Redis XML Interface">
+  <bindings>
+    <binding name="example">
+      <param name="host" value="localhost" />
+      <param name="port" value="6379" />
+      <!-- The parameters key_prefix and key_use_variable are concatenated -->
+      <!-- to generate a redis lookup key. In the following example, the   -->
+      <!-- the dialplan, the lookup key would be: "dialplan_1000" --> 
+      <param name="key_prefix" value="example_" />
+      <param name="key_use_variable" value="variable_sip_from_user" />
+      <param name="bindings" value="dialplan" />
+      <param name="timeout" value="1000" />
+    </binding>
+  </bindings>
+</configuration>
