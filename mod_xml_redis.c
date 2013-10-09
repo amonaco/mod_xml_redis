@@ -208,6 +208,7 @@ static switch_status_t do_config(void)
 
         if (!host) {
             switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, "Binding has no host!\n");
+            // should be using localhost
             if (vars_map)
                 switch_core_hash_destroy(&vars_map);
             continue;
@@ -215,6 +216,7 @@ static switch_status_t do_config(void)
 
         if (!port) {
             switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_ERROR, "Binding has no port!\n");
+            // should be using default
             if (vars_map)
                 switch_core_hash_destroy(&vars_map);
             continue;
@@ -240,10 +242,12 @@ static switch_status_t do_config(void)
             binding->bindings = strdup(bind_mask);
         }
 
+        // this should be asserted
         if (key_prefix != NULL) {
             binding->key_prefix = strdup(key_prefix);
         } 
 
+        // this should be asserted
         if (key_use_variable != NULL) {
             binding->key_use_variable = strdup(key_use_variable);
         }
