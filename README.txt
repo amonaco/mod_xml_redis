@@ -18,8 +18,8 @@ Vs. mod_xml_redis approach:
 
     +--------+-------+       +-------+
     |        | mod   | +---> |       |
-    |   FS   | redis |       | redis |
-    |        | curl  | <---+ |       |
+    |   FS   | xml   |       | redis |
+    |        | redis | <---+ |       |
     +--------+-------+       +-------+
 
 Such configuration might not be ideal in all scenarios, but using redis increases performance and replication between databases. I'd recommend running a local redis instance on every FreeSWITCH if running multiple servers.
