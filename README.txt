@@ -4,14 +4,14 @@ mod_xml_redis
 Overview:
 ---------
 
-This module provides XML binding creation and retrieval of directory, dialplan and configuration XML objects using redis. It is supposed to be slower than conventional filesystem XML configuration files but probably significantly faster than mod_xml_curl since it doesn't involve HTTP, a web server and application code to generate the XML documents 
+This module provides XML binding creation and retrieval of directory, dialplan and configuration XML objects using redis. It is supposed to be slower than conventional filesystem XML configuration files but probably significantly faster than mod_xml_curl since it doesn't involve the HTTP protocol, a web server and application to generate the XML documents. These applications are commonly created using scripting languages and / or web frameworks that often add performance pelnalties. That's the main motivation of developing this module.
 
 A common mod_xml_curl configuration might look something like this:
 
     +--------+------+       +--------+-------+       +--------+
     |        | mod  | +---> |  web   | web   | +---> |        |
     |   FS   | xml  |       | server | app   |       |   DB   |
-    |        | curl | <---+ |        | /cgi  | <---+ |        |
+    |        | curl | <---+ |        | / cgi | <---+ |        |
     +--------+------+       +--------+-------+       +--------+
 
 Vs. mod_xml_redis approach:
@@ -20,9 +20,9 @@ Vs. mod_xml_redis approach:
     |        | mod   | +---> |       |
     |   FS   | xml   |       | redis |
     |        | redis | <---+ |       |
-    +--------+-------+       +-------+
+    +--------+-------+       +-------+  
 
-Such configuration might not be ideal in all scenarios, but using redis increases performance and replication between databases. I'd recommend running a local redis instance on every FreeSWITCH if running multiple servers.
+The configuration might not be ideal in all scenarios but it increases performance and replication between servers. I'd recommend running a local redis instance on every FreeSWITCH if running multiple servers.
 
 This module is still under development and should be used in production at your own risk.
 
@@ -35,7 +35,7 @@ mod_xml_redis relies on the hiredis library. It can be installed in Debian and d
 RHEL and derivates (CentOS, SL Linux, etc):
 # yum install hiredis-devel
 
-Other distributions:
+From source:
 # cd /usr/local/src/
 # git clone git://github.com/antirez/hiredis.git
 # cd hiredis
@@ -70,10 +70,10 @@ A configuration file should look something like this:
   </bindings>
 </configuration>
 
-Where, host, port, bindings (dialplan|directory|configuration) and timeout are pretty standard configuration parameters.
+Where, host, port, bindings (dialplan|directory|configuration) and timeout are pretty standard configuration parameters. Note that only one binding type (dialplan, directory or configuration) can be used in every single binding definition.
 
 The parameters key_prefix and key_use_variable are concatenated to generate a redis lookup key. In the example above, if a user calls this dialplan, the lookup key would be: 
-"dialplan_1000" since "variable_sip_from_user" would be replaced with its real value. Any existing variable can be used to build the lookup key. 
+"dialplan_1000" since "variable_sip_from_user" would be replaced with its real value. Any existing event variable can be used to build the lookup key. 
 
 Example Docuement:
 ------------------
@@ -91,3 +91,5 @@ Example Docuement:
     </context>
   </section>
 </document>
+
+Note that XML documents should be stored as redis key/value datatypes, not hashes.
